@@ -1,0 +1,112 @@
+* {
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
+html {
+  min-height: 100%;
+  background-color: #f3f3f3;
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" !important;
+}
+
+@for $i from 1 to 21 {
+  $step: 10;
+  .mt-#{$i} {
+    margin-top: #{$i * $step}px;
+  }
+  .ml-#{$i} {
+    margin-left: #{$i * $step}px;
+  }
+  .mb-#{$i} {
+    margin-bottom: #{$i * $step}px;
+  }
+  .mr-#{$i} {
+    margin-right: #{$i * $step}px;
+  }
+
+  .pt-#{$i} {
+    padding-top: #{$i * $step}px;
+  }
+  .pl-#{$i} {
+    padding-left: #{$i * $step}px;
+  }
+  .pb-#{$i} {
+    padding-bottom: #{$i * $step}px;
+  }
+  .pr-#{$i} {
+    padding-right: #{$i * $step}px;
+  }
+}
+
+.n-no-select {
+  user-select: none;
+}
+
+.n-view {
+  //border: 1px solid #333;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.n-form-item {
+  &-title {
+    font-weight: bold;
+    padding-right: 1rem;
+    text-align: right;
+  }
+
+  .ivu-input {
+    color: #495057;
+    font-size: 0.9rem;
+  }
+}
+
+.n-flex {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.n-flex-start {
+  justify-content: flex-start;
+}
+
+.n-flex-center {
+  justify-content: center;
+}
+
+.n-flex-end {
+  justify-content: end;
+}
+
+.n-flex-space-around {
+  justify-content: space-around;
+}
+
+.n-flex-space-between {
+  justify-content: space-between;
+}
+
+.n-col-1 {
+  flex: 1;
+}
