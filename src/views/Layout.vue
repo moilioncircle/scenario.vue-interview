@@ -66,7 +66,7 @@
         });
       } else {
         forEach(this.$route.matched, (r) => {
-          const name = get(r, 'meta.name');
+          const name = get(r, 'name');
           if (name) {
             this.$store.commit('menuTab/append', { title: r.meta.title, name, path: r.path });
             return false;
