@@ -21,8 +21,11 @@
         </Menu>
       </Sider>
       <Layout>
+        <n-menu-tabs></n-menu-tabs>
         <Card :style="{margin: '15px', minHeight: '500px'}" dis-hover>
-          <router-view></router-view>
+          <keep-alive :include="cacheList">
+            <router-view></router-view>
+          </keep-alive>
         </Card>
       </Layout>
     </Layout>
@@ -30,11 +33,15 @@
 </template>
 
 <script>
+  import {forEach, get} from 'lodash';
+  import {mapState, mapGetters} from "vuex";
   import {routes} from '../router';
+  import NMenuTabs from "../components/NMenuTabs";
+  import LocalStorageUtil from "../utils/LocalStorageUtil";
 
   export default {
     name: 'layout',
-
+    components: {NMenuTabs},
     data() {
       return {
         activeMenuName: 'Home',
@@ -50,17 +57,62 @@
           path: route.path,
         });
       });
+
+      const curTabName = LocalStorageUtil.get('curMenuTabName');
+      if (curTabName) {
+        this.$store.commit('menuTab/restore', {
+          tabs: LocalStorageUtil.get('menuTabs'),
+          curTabName,
+        });
+      } else {
+        forEach(this.$route.matched, (r) => {
+          const name = get(r, 'meta.name');
+          if (name) {
+            this.$store.commit('menuTab/append', { title: r.meta.title, name, path: r.path });
+            return false;
+          }
+          return true;
+        });
+      }
     },
 
-    computed: {},
+    computed: {
+      ...mapState('menuTab', ['tabs', 'curTabName', 'curTab']),
+      ...mapGetters('menuTab', ['cacheList']),
+    },
+
+    watch: {
+      curTab(to, from) {
+        if (this.$route.path !== this.curTab.path) {
+          this.$router.push(this.curTab.path);
+        }
+        this.activeMenuName = this.curTab.title;
+      }
+    },
 
     methods: {
       onClickMenu(menu) {
-        if (this.$route.path !== menu.path) {
-          this.$router.push(menu.path);
-        }
+        this.$store.commit('menuTab/append', menu);
       }
     },
+
+    beforeRouteUpdate(to, from, next) {
+      // 处理点击浏览器前进, 后退时menu的同步问题
+
+      // 找到tab, 更新path (可以还原子路由)
+
+      forEach(to.matched, (r) => {
+        const name = get(r, 'name');
+        if (name) {
+          this.$store.commit('menuTab/active', { name, path: to.path });
+          return false;
+        }
+        return true;
+      });
+
+      next();
+    }
+
   }
 </script>
 
