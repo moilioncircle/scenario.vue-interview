@@ -1,7 +1,11 @@
 <template>
   <div class="form">
     <h1>This is form page</h1>
-    <Input v-model="text"></Input>
+    <Form class="form">
+      <FormItem label="Name" :label-width="100">
+        <Input v-model="text"></Input>
+      </FormItem>
+    </Form>
   </div>
 </template>
 
@@ -15,3 +19,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .form {
+    width: 400px;
+  }
+</style>

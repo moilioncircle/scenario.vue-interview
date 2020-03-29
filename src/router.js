@@ -33,7 +33,7 @@ export const routes = [
   }
 ];
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '',
@@ -47,3 +47,11 @@ export default new Router({
     }
   ]
 });
+
+export default router;
+
+export function routerTo(path) {
+  if (router.history.current.fullPath !== path) {
+    return router.push(path).catch(() => {});
+  }
+}

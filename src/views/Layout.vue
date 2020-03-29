@@ -33,9 +33,9 @@
 </template>
 
 <script>
-  import {forEach, get} from 'lodash';
-  import {mapState, mapGetters} from "vuex";
-  import {routes} from '../router';
+  import {forEach, get, find} from 'lodash';
+  import {mapState, mapGetters, mapMutations} from "vuex";
+  import {routerTo, routes} from '../router';
   import NMenuTabs from "../components/NMenuTabs";
   import LocalStorageUtil from "../utils/LocalStorageUtil";
 
@@ -64,54 +64,43 @@
           tabs: LocalStorageUtil.get('menuTabs'),
           curTabName,
         });
-      } else {
-        forEach(this.$route.matched, (r) => {
-          const name = get(r, 'name');
-          if (name) {
-            this.$store.commit('menuTab/append', { title: r.meta.title, name, path: r.path });
-            return false;
-          }
-          return true;
-        });
       }
     },
 
     computed: {
-      ...mapState('menuTab', ['tabs', 'curTabName', 'curTab']),
+      ...mapState('menuTab', ['tabs', 'curTabName']),
       ...mapGetters('menuTab', ['cacheList']),
     },
 
     watch: {
-      curTab(to, from) {
-        if (this.$route.path !== this.curTab.path) {
-          this.$router.push(this.curTab.path);
-        }
-        this.activeMenuName = this.curTab.title;
+      curTabName: {
+        handler(to, from) {
+          const tab = find(this.tabs, { name: to });
+          if (tab) {
+            this.activeMenuName = tab.title;
+          }
+        },
+        immediate: true,
       }
     },
 
-    methods: {
-      onClickMenu(menu) {
-        this.$store.commit('menuTab/append', menu);
-      }
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.onRouterChange(to);
+      });
     },
 
     beforeRouteUpdate(to, from, next) {
-      // 处理点击浏览器前进, 后退时menu的同步问题
-
-      // 找到tab, 更新path (可以还原子路由)
-
-      forEach(to.matched, (r) => {
-        const name = get(r, 'name');
-        if (name) {
-          this.$store.commit('menuTab/active', { name, path: to.path });
-          return false;
-        }
-        return true;
-      });
-
+      this.onRouterChange(to);
       next();
-    }
+    },
+
+    methods: {
+      ...mapMutations('menuTab', ['onRouterChange']),
+      onClickMenu(menu) {
+        routerTo(menu.path);
+      }
+    },
 
   }
 </script>

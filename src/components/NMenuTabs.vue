@@ -34,6 +34,7 @@
   import draggable from 'vuedraggable';
   import {mapState} from "vuex";
   import NContextMenu from './NContextMenu';
+  import {routerTo} from "../router";
 
   export default {
     name: 'NMenuTabs',
@@ -65,7 +66,7 @@
     },
     methods: {
       onClickTab(tab) {
-        this.$store.commit('menuTab/active', {name: tab.name});
+        routerTo(tab.path);
       },
       onCloseTab(tab, index) {
         this.$store.commit('menuTab/remove', index);
