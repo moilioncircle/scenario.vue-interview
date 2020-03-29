@@ -11,7 +11,7 @@ export default {
   namespaced: true,
   state: {
     tabs: [],
-    curTabName: '',
+    curTabName: 'home',
   },
   getters: {
     cacheList(state) {
