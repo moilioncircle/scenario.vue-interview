@@ -50,9 +50,8 @@ export default {
     },
     onRouterChange(state, to) {
       const tab = find(state.tabs, { name: to.name });
-      if (tab) {
-        state.curTabName = to.name;
-      } else {
+      state.curTabName = to.name;
+      if (!tab) {
         state.tabs.push({ name: to.name, path: to.path, title: to.meta.title});
       }
       Save2LocalStorage(state);
